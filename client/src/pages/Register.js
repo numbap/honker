@@ -79,7 +79,7 @@ function Register() {
     if (user) {
       setTimeout(() => {
         navigate('/')
-      }, process.env.PORT || 3000)
+      }, 3000)
     }
   }, [user, navigate])
 
