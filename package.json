@@ -29,7 +29,7 @@
     "xss-clean": "^0.1.1"
   },
   "scripts": {
-    "build-client": "cd client && pwd && ls && yarn build",
+    "build-client": "cd client && npm run build",
     "server": "nodemon server --ignore client",
     "client": "yarn --cwd client start",
     "start": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run client\"",
