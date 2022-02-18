@@ -29,12 +29,12 @@
     "xss-clean": "^0.1.1"
   },
   "scripts": {
-    "build-client": "cd client && npm run build",
+    "build-client": "cd client && yarn build",
     "server": "nodemon server --ignore client",
     "client": "yarn --cwd client start",
     "start": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run client\"",
-    "install-client": "cd client && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build-client",
+    "install-client": "cd client && yarn install",
+    "heroku-postbuild": "yarn install-client && yarn build-client"
   },
   "engines": {
     "node": "16.x"
