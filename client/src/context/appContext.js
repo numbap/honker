@@ -182,7 +182,7 @@ const AppProvider = ({ children }) => {
   const clearAlert = () => {
     setTimeout(() => {
       dispatch({ type: CLEAR_ALERT });
-    }, process.env.PORT || 3000);
+    }, 3000);
   };
 
   const registerUSer = async (currentUser) => {
