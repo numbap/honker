@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises'
+import { updateChannel } from './controllers/channelController.js'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -23,4 +24,5 @@ const start = async () => {
   }
 }
 
-start()
+// start()
+
