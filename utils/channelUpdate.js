@@ -1,4 +1,4 @@
-import {TranscriptLineSchemaModel, VideoModel, ChannelModel} from '../models/Channel.js'
+import {TranscriptLineModel, VideoModel, ChannelModel} from '../models/Channel.js'
 import { StatusCodes } from 'http-status-codes'
 import { BadRequestError, NotFoundError } from '../errors/index.js'
 import checkPermissions from '../utils/checkPermissions.js'
@@ -7,92 +7,156 @@ import axios from 'axios'
 import dotenv from 'dotenv'
 
 const youTubeURL = 'https://youtube.googleapis.com/youtube/v3/search'
-// const youTubeURL = 'https://youtube.googleapis.com/youtube/v3/activities'
+
 const transcriptUrl = ""
 
-export const updateChannel = async (hash) => {
+// regex = /(\[.*?\])/gi
+// console.log("I love [music] sessions".replace(regex, "."))
+
+///\b($word)\b/i whole word match
+
+// Get Channel Name to pretty up output
+// https://youtube.googleapis.com/youtube/v3/channels?part=snippet&id=UCpFN5_YDQpHMF2XGpV9JKrA&key=[YOUR_API_KEY]
+
+export const updateChannel = async (hash, owner, paginate) => {
 
     console.log(hash)
     if (!hash) {
       throw new BadRequestError('Please provide a channel has')
     }
     let channel
+    let vids
+    let channelTitle
     try{
+      // Find Channel
         channel = await ChannelModel.findOne({ hash })
-        // console.log(channel.videos[0].corpus, "this shoudl be blank")
         if(!channel){
-            console.log("Create new model")
-            channel = await ChannelModel.create({ hash })
-        }
-        console.log(`${youTubeURL}?part=snippet&channelId=${hash}&maxResults=25&access_token=${process.env.YOUTUBE_DATA}&key=${process.env.YOUTUBE_DATA}`)
-        let vids = await axios.get(`${youTubeURL}?part=snippet&channelId=${hash}&maxResults=25&access_token=${process.env.YOUTUBE_DATA}&key=${process.env.YOUTUBE_DATA}`);
-        let token = vids.data.nextPageToken
-        // console.log(vids, "vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
-
-
-        vids = await Promise.all(vids.data.items.filter(x => x.id.videoId ).map(async x => {
-            const {etag, id} = x
-            // let transcriptLines = await getTranscripts(id.videoId)
-            // console.log(transcriptLines.length ? transcriptLines.length : 0)
-            // transcriptLines = transcriptLines.length ? transcriptLines.map(x => {
-            //     let {index, start, dur, end, text } = x
-            //     text = text ? text : ''
-            //     return new TranscriptLineSchemaModel({index, start, dur, end, text })
-            // }) : []
-            // const corpus = transcriptLines.map(x => x.text).join(" ")
-            return {etag, transcript:[], name:'Vidx', videoId: id.videoId}
-        }))
-
-        // Map through array of objects and upsert each one. 
-        try{
-            await Promise.all(vids.map( async x => {
-            var query = {hash,'videos.videoId': 'k1t0Eeqd4WM'};
-            let push = {$setOnInsert: { videos: {
-              etag: 'q1AcbrM_dfHo78xBO6cJlgE0YFg',
-              transcript: [],
-              name: 'Vidx'
-            }}}
-
-            console.log(x)
-
-            // let query = {"videoId": "k1t0Eeqd4WM"}
-
-            let y = await channel.updateOne(
-              query, 
-              push)
-            console.log(channel, channel.videos)
-            },
-            {upsert: true}))
-        } catch(e){
-            console.log(e)
+            channel = await ChannelModel.create({ hash, owner })
+        }else{
+          await channel.populate('videos')
         }
 
+        let token = ""
+        // Keep looping until no more page tokens
+        while(true){
 
-        channel.videos = vids
-
-        // const fffff = await ChannelModel.findOneAndUpdate({hash}, channel, {
-        //     new: true,
-        //     runValidators: true,
-        //   })
-
+          // Get videos
+          vids = await axios.get(`${youTubeURL}?part=snippet&channelId=${hash}&maxResults=25&access_token=${process.env.YOUTUBE_DATA}&key=${process.env.YOUTUBE_DATA}&pageToken=${token}`);
+          token = vids.data.nextPageToken
           console.log(token)
-    }catch(e){
-        // console.log(channel, "Error")
 
+          vids = await Promise.all(vids.data.items.filter(x => x.id.videoId ).map(async x => {
+              const {etag, id, snippet} = x
+              let transcriptLines = await getTranscripts(id.videoId)
+
+              transcriptLines = transcriptLines ? transcriptLines.map(x => {
+                  let {index, start, dur, end, text } = x
+                  text = text ? text : ''
+
+                  text = text.replace(/(\[.*?\])/gi, "")
+
+                  let transcriptModel = {index, start, dur, end, text }
+                  return transcriptModel
+              }) : []
+
+              const corpus = await transcriptLines.map(x => {
+                console.log(x)
+                return x.text}).join(" ")
+
+              channelTitle = snippet.channelTitle  
+              return {etag, transcript:transcriptLines, name: snippet.title, videoId: id.videoId, corpus}
+          }))
+
+
+          // Add videos to document or update
+          await Promise.all(vids.map(async x => {
+            try{
+              let video = await VideoModel.findOne({ videoId: x.videoId })
+              if(!video){
+                video = VideoModel({ videoId: x.videoId, name: x.name, etag: x.etag, transcript: x.transcript, channel: channel._id, corpus: x.corpus})
+                channel.videos.push(video)
+                await video.save()
+              }else{
+                video.name = x.name
+                video.save()
+              }
+
+            }catch(e){
+              console.log(e)
+            }
+          }))
+          await channel.save()
+          channel.moop = vids
+          channel.name = channelTitle
+          channel.save()
+
+          if(!token || !paginate){
+            break
+          }
+
+        }
+        return vids
+    }catch(e){
         console.log("error", e)
+        return []
     }
+
   }
 
 
-const updateLooper = async (channel) => {
-    do {
-        updateChannel(channel)
-        i = i + 1;
-        result = result + i;
-      } while (i < 5);
+
+
+export const boldifyer = (searchString, lineArray) => {
+  try{
+    let wordArray = searchString.match(/\b(\w+)\b/g)
+
+  // regex = /(\[.*?\])/gi
+  // console.log("I love [music] sessions".replace(regex, "."))
+  
+  ///\b($word)\b/i whole word match
+  
+    let finalOutput = lineArray.map(x => {
+      let tmp = {...x}
+  
+      wordArray.map(y => {
+        let re = RegExp(`\\b${y}\\b`, 'gi')
+        tmp.text = tmp.text.replace(re, `<b>${y}</b>`)
+      })
+
+      if(tmp.text === x.text){
+        tmp.text = null
+      }
+      return tmp
+    }).filter(y => y.text)
+  
+    return finalOutput
+  }catch(e){
+    console.log(e)
+  }
+
 
 }
 
+
+export const refTest = async (hash) => {
+  let channel = await ChannelModel.findOne({ hash })
+  let video = await VideoModel.findOne({ videoId: 'lllll' })
+  if(!channel){
+    channel = await new ChannelModel({hash})
+  }
+  if(!video){
+    video = VideoModel({ videoId: 'lllll', name: "The Video", etag: "ddddd", channel: channel._id })
+    channel.videos.push(video)
+    await video.save()
+    await channel.save()
+    console.log(channel, "xxxxxx")
+  }
+  video.populate('channel')
+  await channel.populate('videos')
+  await channel.save()
+  // console.log(channel, video)
+
+}
 
 
 
@@ -115,14 +179,27 @@ const getTranscripts = async (video) => {
     
     let froo = await axios(config)
     .then(function (response) {
-        return response.data
+        return response.data.length ? response.data : []
         // console.log(JSON.stringify(response.data));
     })
     .catch(function (error) {
-      console.log(error);
+      // console.log(error);
+      return []
     });
 
-    return froo
+    return froo ? froo : []
     
 
   }
+
+  export const getChannelId = async (videoid) => {
+
+    try{
+      let vids = await axios.get(`https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=ubldqqM1tPw&key=${process.env.YOUTUBE_DATA}&key=${process.env.YOUTUBE_DATA}`)
+      console.log(vids.data.items[0].snippet.channelId)
+    }catch(e){
+      console.log(e.response)
+    }
+  }
+
+  

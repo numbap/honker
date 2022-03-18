@@ -27,7 +27,7 @@ const StatsContainer = () => {
       bcg: '#ffeeee',
     },
   ]
-  console.log(stats, "....stats")
+
   return (
     <Wrapper>
       {

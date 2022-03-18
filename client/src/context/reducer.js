@@ -24,7 +24,15 @@ import {
     CLEAR_FILTERS,
     SHOW_STATS_BEGIN,
     SHOW_STATS_SUCCESS,
-    CHANGE_PAGE
+    CHANGE_PAGE,
+    ADD_CHANNEL_BEGIN,
+    ADD_CHANNEL_SUCCESS,
+    UPDATE_CHANNEL_LIST,
+    SEARCH_BEGIN,
+    SEARCH_SUCCESS,
+    SELECT_VIDEO,
+    SET_CHANNEL,
+    SET_LIBRARY
    } from "./actions"
 
    import { initialState } from './appContext'
@@ -84,6 +92,18 @@ const reducer = (state, action) => {
         return { ...state, isLoading: true }
       }
 
+      if (action.type === SET_CHANNEL) {
+        return { ...state, currentChannel: action.payload.currentChannel }
+      }
+
+      if (action.type === SET_LIBRARY) {
+        return { ...state, library: action.payload.library }
+      }
+
+      if (action.type === UPDATE_CHANNEL_LIST) {
+        return { ...state, channels: action.payload.channels }
+      }
+
       if (action.type === UPDATE_USER_SUCCESS) {
         return {
           ...state,
@@ -97,6 +117,15 @@ const reducer = (state, action) => {
           alertText: 'User Profile Updated!',
         }
       }
+
+      if (action.type === ADD_CHANNEL_SUCCESS) {
+        return {
+          ...state,
+          isLoading: false,
+        }
+      }
+
+
       if (action.type === UPDATE_USER_ERROR) {
         return {
           ...state,
@@ -120,6 +149,9 @@ const reducer = (state, action) => {
           jobLocation: state.userLocation,
           jobType: 'full-time',
           status: 'pending',
+          channelForm: {
+            channelId: ''
+          }
         }
         return { ...state, ...initialState }
       }
@@ -214,6 +246,10 @@ const reducer = (state, action) => {
         return { ...state, isLoading: true, showAlert: false }
       }
 
+      if (action.type === ADD_CHANNEL_BEGIN) {
+        return { ...state, isLoading: true, showAlert: false }
+      }
+
       if (action.type === SHOW_STATS_SUCCESS) {
         console.log("payload stats", action.payload.stats)
         return {
@@ -226,6 +262,21 @@ const reducer = (state, action) => {
 
       if (action.type === CHANGE_PAGE) {
         return { ...state, page: action.payload.page }
+      }
+
+      if (action.type === SEARCH_BEGIN) {
+        return { ...state, isLoading: true }
+      }
+
+      if (action.type === SELECT_VIDEO) {
+        return { 
+          ...state, 
+          currentVideo: action.payload.currentVideo, 
+          isLoading: action.payload.isLoading }
+      }
+
+      if (action.type === SEARCH_SUCCESS) {
+        return { ...state, searchListings: action.payload.searchListings, isLoading: false }
       }
 
       throw new Error(`no such action :${action.type}`)

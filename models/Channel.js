@@ -5,19 +5,18 @@ const TranscriptLineSchema = new mongoose.Schema(
     {
         index: {
           type: String,
-          required: [true, 'Please provide video name'],
         },
         start: {
             type: Number,
-            required: [true, 'Please provide start time'],
+            default: 0
         },
         dur: {
             type: Number,
-            required: [true, 'Please provide duration'],
+            default: 0
         },
         end: {
             type: Number,
-            required: [true, 'Please provide end time'],
+            default: 0
         },
         text: {
             type: String,
@@ -38,6 +37,9 @@ const VideoSchema = new mongoose.Schema(
             required: [true, 'Please provide video tag'],
             maxlength: 500,
         },
+        title: {
+          type: String
+        },
         videoId: {
             type: String,
             required: [true, 'Please provide video id'],
@@ -47,10 +49,15 @@ const VideoSchema = new mongoose.Schema(
         corpus: {
           type: String,
         },
-        transcript: [ TranscriptLineSchema ]
+        transcript: [ Object ],
+        channel: {
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: 'Channel' 
+        },
       },
       { timestamps: true }
   )
+  VideoSchema.index({name: 'text', 'corpus': 'text'});
 
   const ChannelSchema = new mongoose.Schema(
     {
@@ -58,19 +65,25 @@ const VideoSchema = new mongoose.Schema(
         type: String,
         maxlength: 50,
       },
+      name: {
+        type: String
+      },
       hash: {
           type: String,
           required: [true, 'Please provide channel hash'],
           maxlength: 50,
           index: true 
         },
-      videos: [ VideoSchema ]
+      videos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video' }],
+      owner: String,
+      meep: String,
+      moop: Object
     },
-      { timestamps: true }
+    { timestamps: true }
   )
 
-const TranscriptLineSchemaModel = mongoose.model('TranscriptLine', TranscriptLineSchema)
+const TranscriptLineModel = mongoose.model('TranscriptLine', TranscriptLineSchema)
 const VideoModel = mongoose.model('Video', VideoSchema)
 const ChannelModel = mongoose.model('Channel', ChannelSchema)
 
-export {TranscriptLineSchemaModel, VideoModel, ChannelModel}
+export {TranscriptLineModel, VideoModel, ChannelModel}

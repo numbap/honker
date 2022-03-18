@@ -23,6 +23,7 @@ const Navbar = () => {
           <h3 className='logo-text'>dashboard</h3>
         </div>
 
+        
         <div className='btn-container'>
           <button className='btn' onClick={() => setShowLogout(!showLogout)}>
             <FaUserCircle />

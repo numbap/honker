@@ -11,6 +11,8 @@ import StatsContainer from './StatsContainer.js'
 import StatItem from './StatItem.js'
 import ChartsContainer from './ChartsContainer.js'
 import Loading from './Loading.js'
+import VideoSearchSnippet from './VideoSearchSnippet.js'
+import VideoSearchAllSnippets from './VideoSearchAllSnippets.js'
 
 export {
     Logo, 
@@ -24,5 +26,7 @@ export {
     JobsContainer,
     StatsContainer,
     StatItem,
+    VideoSearchSnippet,
     ChartsContainer, 
-    Loading}
+    Loading, 
+    VideoSearchAllSnippets}

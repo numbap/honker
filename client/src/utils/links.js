@@ -1,6 +1,6 @@
 import { IoBarChartSharp } from 'react-icons/io5'
 import { MdQueryStats } from 'react-icons/md'
-import { FaWpforms } from 'react-icons/fa'
+import { FaWpforms, FaYoutube } from 'react-icons/fa'
 import { ImProfile } from 'react-icons/im'
 
 const links = [
@@ -27,6 +27,12 @@ const links = [
       text: 'profile',
       path: 'profile',
       icon: <ImProfile />,
+    },
+    {
+      id: 5,
+      text: 'channels',
+      path: 'channels',
+      icon: <FaYoutube />,
     },
   ]
   

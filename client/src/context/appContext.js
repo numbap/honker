@@ -28,7 +28,15 @@ import {
   SET_EDIT_JOB,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
-  CHANGE_PAGE
+  CHANGE_PAGE,
+  ADD_CHANNEL_BEGIN,
+  ADD_CHANNEL_SUCCESS, 
+  UPDATE_CHANNEL_LIST,
+  SEARCH_BEGIN,
+  SEARCH_SUCCESS,
+  SELECT_VIDEO,
+  SET_CHANNEL,
+  SET_LIBRARY
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -64,7 +72,14 @@ export const initialState = {
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
   stats: {},
   monthlyApplications: [],
-
+  channelForm: {
+    channelId: ''
+  },
+  channels: [{hash:"dddddd"}, {hash:"ppppppppp"}, {hash:"oooooooooo"}],
+  searchListings: [],
+  currentVideo: {videoId:null},
+  currentChannel: {name:'Loading...'},
+  library: []
 };
 
 const AppContext = React.createContext();
@@ -179,6 +194,39 @@ const AppProvider = ({ children }) => {
     dispatch({ type: DISPLAY_ALERT });
   };
 
+  const selectVideo = async (currentVideo) => {
+    if(currentVideo){
+      dispatch({ 
+        type: SELECT_VIDEO,
+        payload: { currentVideo, isLoading: true }
+       });
+       let vid = await axios.get(
+        `/api/v1/search/v/${currentVideo.videoId}`
+      );
+      console.log(vid.data.vid)
+      dispatch({ 
+        type: SELECT_VIDEO,
+        payload: { currentVideo: vid.data.vid, isLoading: false }
+       });
+    }else{
+      dispatch({ 
+        type: SELECT_VIDEO,
+        payload: { currentVideo, isLoading: false }
+       });
+    }
+
+  };
+
+  const getChannelInfo = async (hash) => {
+    let currentChannel = await axios.get(
+      `/api/v1/search/c/${hash}`
+    );
+    dispatch({ 
+      type: SET_CHANNEL,
+      payload: { currentChannel: currentChannel.data }
+     });
+  }
+
   const clearAlert = () => {
     setTimeout(() => {
       dispatch({ type: CLEAR_ALERT });
@@ -222,6 +270,35 @@ const AppProvider = ({ children }) => {
     });
   };
 
+  const getChannels = async () => {
+    try{
+      let response = await authFetch.get("/channels");
+      dispatch({
+        type: UPDATE_CHANNEL_LIST,
+        payload: { channels: response.data.channels },
+      });
+      
+    }catch(e){
+      return []
+    }
+
+  }
+
+
+  const getLibrary = async (hash) => {
+    let library = await axios.get(
+      `/api/v1/search/c/all`
+    );
+    console.log(library, "hhhhhhhhhhhhhh")
+    dispatch({ 
+      type: SET_LIBRARY,
+      payload: { library: library.data.chan }
+     });
+  }
+
+
+
+
   const clearValues = () => {
     dispatch({ type: CLEAR_VALUES });
   };
@@ -253,6 +330,39 @@ const AppProvider = ({ children }) => {
     }
     clearAlert();
   };
+
+
+
+  const addChannel = async (formData) => {
+    dispatch({ type: ADD_CHANNEL_BEGIN });
+    try {
+      const { channelId } = formData;
+      console.log(channelId)
+
+      let xxxx = await authFetch.post("/channels", {
+        channelId
+      });
+      console.log(xxxx, "xxxxxxxxxx")
+      dispatch({
+        type: ADD_CHANNEL_SUCCESS,
+      });
+      // call function instead clearValues()
+      console.log("Channel Created");
+      dispatch({ type: CLEAR_VALUES });
+    } catch (error) {
+      if (error.response.status === 401) return;
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+
+
+
+
 
   const setEditJob = (id) => {
     dispatch({ type: SET_EDIT_JOB, payload: { id } });
@@ -317,6 +427,39 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const searchChannel = async (search, channelId) => {
+    console.log(search, "Channel Id")
+    dispatch({ type: SEARCH_BEGIN });
+    try {
+      const response = await axios.post(
+        `/api/v1/search/${channelId}`,{
+        search}
+      );
+      // const { user, token, location } = response.data;
+
+      dispatch({
+        type: SEARCH_SUCCESS,
+        payload: {
+          searchListings: response.data
+        },
+      });
+    } catch (error) {
+      dispatch({
+        type: SETUP_USER_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  };
+
+
+
+
+
+
+
+
+
 
   const changePage = (page) => {
     dispatch({ type: CHANGE_PAGE, payload: { page } })
@@ -342,7 +485,14 @@ const AppProvider = ({ children }) => {
         clearFilters,
         editJob,
         showStats,
-        changePage
+        changePage, 
+        addChannel,
+        getChannels,
+        searchChannel,
+        selectVideo,
+        getChannels,
+        getChannelInfo,
+        getLibrary
       }}
     >
       {children}
@@ -355,68 +505,3 @@ export const useAppContext = () => {
 };
 
 export { AppProvider };
-
-// const registerUser = async (currentUser) => {
-//   dispatch({ type: REGISTER_USER_BEGIN })
-//   try {
-//     const response = await axios.post('/api/v1/auth/register', currentUser)
-//     console.log(response)
-//     const { user, token, location } = response.data
-//     dispatch({
-//       type: REGISTER_USER_SUCCESS,
-//       payload: {
-//         user,
-//         token,
-//         location,
-//       },
-//     })
-//     addUserToLocalStorage({
-//       user,
-//       token,
-//       location,
-//     })
-
-//     // will add later
-//     // addUserToLocalStorage({
-//     //   user,
-//     //   token,
-//     //   location,
-//     // })
-//   } catch (error) {
-//     // console.log(error.response)
-//     dispatch({
-//       type: REGISTER_USER_ERROR,
-//       payload: { msg: error.response.data.msg },
-//     })
-//   }
-//   clearAlert()
-
-// }
-
-// const loginUser = async (currentUser) => {
-//   dispatch({ type: LOGIN_USER_BEGIN })
-//   try {
-//     const response = await axios.post('/api/v1/auth/login', currentUser)
-//     const { user, token, location } = response.data
-//     dispatch({
-//       type: LOGIN_USER_SUCCESS,
-//       payload: {
-//         user,
-//         token,
-//         location,
-//       },
-//     })
-//     addUserToLocalStorage({
-//       user,
-//       token,
-//       location,
-//     })
-//   } catch (error) {
-//     console.log(error.response, "xxxxxxxxxxxxxxx")
-//     dispatch({
-//       type: LOGIN_USER_ERROR,
-//       payload: { msg: error.response.data.msg },
-//     })
-//   }
-//   clearAlert()
-// }
