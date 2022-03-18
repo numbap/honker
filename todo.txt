@@ -1,0 +1,8 @@
+Fix spinner on channels page 
+Upload to Heroku
+Cron job to top up all channels
+Library real-time search
+Create indexes on database 
+Register domain
+Add to porftolio
+Pagination for search results

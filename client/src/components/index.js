@@ -6,13 +6,11 @@ import BigSidebar from './BigSidebar'
 import SmallSidebar from './SmallSidebar'
 import FormRowSelect from './formRowSelect'
 import SearchContainer from './SearchContainer'
-import JobsContainer from './JobsContainer'
-import StatsContainer from './StatsContainer.js'
-import StatItem from './StatItem.js'
 import ChartsContainer from './ChartsContainer.js'
 import Loading from './Loading.js'
 import VideoSearchSnippet from './VideoSearchSnippet.js'
 import VideoSearchAllSnippets from './VideoSearchAllSnippets.js'
+import Nav from './Nav.js'
 
 export {
     Logo, 
@@ -22,10 +20,8 @@ export {
     BigSidebar, 
     NavBar, 
     FormRowSelect, 
+    Nav,
     SearchContainer, 
-    JobsContainer,
-    StatsContainer,
-    StatItem,
     VideoSearchSnippet,
     ChartsContainer, 
     Loading, 

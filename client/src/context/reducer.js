@@ -97,7 +97,7 @@ const reducer = (state, action) => {
       }
 
       if (action.type === SET_LIBRARY) {
-        return { ...state, library: action.payload.library }
+        return { ...state, library: action.payload.library, currentChannel: {name:'Loading...'}, currentVideo: {videoId:null}}
       }
 
       if (action.type === UPDATE_CHANNEL_LIST) {

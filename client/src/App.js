@@ -13,21 +13,18 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={
+        <Route path='/admin' element={
             <ProtectedRoute>
               <SharedLayout/>
               </ProtectedRoute>}>
-              <Route index element={<Stats/>} />
-              <Route path="stats" element={<Stats />} />
-              <Route path='all-jobs' element={<AllJobs/>}/>
-              <Route path='add-job' element={<AddJob />}/>
+              <Route index element={<Channels />} />
               <Route path='profile' element={<Profile />}/>
               <Route path='channels' element={<Channels />}/>
         </Route>
         <Route path="/register" element={<Register/>} />
         <Route path="/landing" element={<Landing />} />
         <Route path='/:channelId' element={<ChannelSearch />}/>
-        <Route path='/library' element={<Library />}/>
+        <Route path='/' element={<Library />}/>
         <Route path="*" element={<Error/>} />
       </Routes>
     </BrowserRouter>

@@ -5,7 +5,6 @@ import 'express-async-errors'
 import notFoundMiddleware from './middlware/not-found.js'
 import errorHandlerMiddleware from './middlware/error-handler.js'
 import authRouter from './routes/authRoutes.js' 
-import jobsRouter from './routes/jobsRoutes.js'
 import channelsRouter from './routes/channelsRoutes.js'
 import searchRouter from './routes/searchRoutes.js'
 import morgan from 'morgan'
@@ -46,7 +45,7 @@ app.get('/api/v1', (req, res) => {
 })
 
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1/jobs', authenticateUser, jobsRouter)
+// app.use('/api/v1/jobs', authenticateUser, jobsRouter)
 app.use('/api/v1/channels', authenticateUser, channelsRouter)
 app.use('/api/v1/search', searchRouter)
 

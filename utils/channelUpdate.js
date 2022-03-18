@@ -20,15 +20,15 @@ const transcriptUrl = ""
 
 export const updateChannel = async (hash, owner, paginate) => {
 
-    console.log(hash)
+    console.log(`-${hash}-`)
     if (!hash) {
-      throw new BadRequestError('Please provide a channel has')
+      throw new BadRequestError('Please provide a channel hash')
     }
     let channel
     let vids
     let channelTitle
     try{
-      // Find Channel
+        // Find Channel
         channel = await ChannelModel.findOne({ hash })
         if(!channel){
             channel = await ChannelModel.create({ hash, owner })
@@ -85,16 +85,17 @@ export const updateChannel = async (hash, owner, paginate) => {
               console.log(e)
             }
           }))
-          await channel.save()
-          channel.moop = vids
+          
           channel.name = channelTitle
-          channel.save()
+          await channel.save()
+
 
           if(!token || !paginate){
             break
           }
 
         }
+        console.log('Done!')
         return vids
     }catch(e){
         console.log("error", e)

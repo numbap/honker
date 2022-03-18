@@ -125,6 +125,7 @@ small,
 a {
   text-decoration: none;
   letter-spacing: var(--letterSpacing);
+  color: var(--black);
 }
 a,
 button {
