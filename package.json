@@ -36,9 +36,9 @@
     "build-client": "cd client && npm run && npm run build",
     "server": "nodemon server --ignore client",
     "client": "yarn --cwd client start",
-    "start": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run client\"",
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "install-client": "cd client && yarn install",
-    "heroku-postbuild": "yarn install-client && yarn build-client"
+    "heroku-postbuild": "npm install-client && npm build-client"
   },
   "engines": {
     "node": "16.x"
