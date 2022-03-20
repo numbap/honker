@@ -77,6 +77,8 @@ export const initialState = {
   },
   channels: [{hash:"dddddd"}, {hash:"ppppppppp"}, {hash:"oooooooooo"}],
   searchListings: [],
+  searchCount: 0,
+  searchPage: 1,
   currentVideo: {videoId:null},
   currentChannel: {name:'Loading...'},
   library: []
@@ -106,7 +108,7 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      console.log(error.response);
+
       if (error.response.status === 401) {
         logoutUser();
       }
@@ -182,9 +184,9 @@ const AppProvider = ({ children }) => {
     clearAlert()
   }
 
-  useEffect(() => {
-    getJobs();
-  }, []);
+  // useEffect(() => {
+  //   getJobs();
+  // }, []);
 
   const toggleSidebar = () => {
     dispatch({ type: TOGGLE_SIDEBAR });
@@ -203,7 +205,7 @@ const AppProvider = ({ children }) => {
        let vid = await axios.get(
         `/api/v1/search/v/${currentVideo.videoId}`
       );
-      console.log(vid.data.vid)
+
       dispatch({ 
         type: SELECT_VIDEO,
         payload: { currentVideo: vid.data.vid, isLoading: false }
@@ -221,6 +223,7 @@ const AppProvider = ({ children }) => {
     let currentChannel = await axios.get(
       `/api/v1/search/c/${hash}`
     );
+    document.title = `Zeeph : ${currentChannel.data.name}`
     dispatch({ 
       type: SET_CHANNEL,
       payload: { currentChannel: currentChannel.data }
@@ -289,7 +292,6 @@ const AppProvider = ({ children }) => {
     let library = await axios.get(
       `/api/v1/search/c/all`
     );
-    console.log(library, "hhhhhhhhhhhhhh")
     dispatch({ 
       type: SET_LIBRARY,
       payload: { library: library.data.chan }
@@ -303,51 +305,22 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CLEAR_VALUES });
   };
 
-  const createJob = async () => {
-    dispatch({ type: CREATE_JOB_BEGIN });
-    try {
-      const { position, company, jobLocation, jobType, status } = state;
-
-      await authFetch.post("/jobs", {
-        company,
-        position,
-        jobLocation,
-        jobType,
-        status,
-      });
-      dispatch({
-        type: CREATE_JOB_SUCCESS,
-      });
-      // call function instead clearValues()
-      console.log("Job Created");
-      dispatch({ type: CLEAR_VALUES });
-    } catch (error) {
-      if (error.response.status === 401) return;
-      dispatch({
-        type: CREATE_JOB_ERROR,
-        payload: { msg: error.response.data.msg },
-      });
-    }
-    clearAlert();
-  };
-
 
 
   const addChannel = async (formData) => {
     dispatch({ type: ADD_CHANNEL_BEGIN });
     try {
       const { channelId } = formData;
-      console.log(channelId)
 
       let xxxx = await authFetch.post("/channels", {
         channelId
       });
-      console.log(xxxx, "xxxxxxxxxx")
+
       dispatch({
         type: ADD_CHANNEL_SUCCESS,
       });
       // call function instead clearValues()
-      console.log("Channel Created");
+
       dispatch({ type: CLEAR_VALUES });
     } catch (error) {
       if (error.response.status === 401) return;
@@ -359,15 +332,6 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-
-
-
-
-
-  const setEditJob = (id) => {
-    dispatch({ type: SET_EDIT_JOB, payload: { id } });
-    console.log(`set edit job : ${id}`);
-  };
 
   const deleteJob = async (jobId) => {
     dispatch({ type: DELETE_JOB_BEGIN });
@@ -427,20 +391,26 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
-  const searchChannel = async (search, channelId) => {
-    console.log(search, "Channel Id")
-    dispatch({ type: SEARCH_BEGIN });
+
+
+  /////////////////////////////////////
+  // Come back and check logic here
+  /////////////////////////////////////
+  const searchChannel = async (search, channelId, searchPage) => {
+
+    dispatch({ type: SEARCH_BEGIN, payload: {searchPage} });
     try {
       const response = await axios.post(
         `/api/v1/search/${channelId}`,{
-        search}
+        search, 
+        searchPage}
       );
-      // const { user, token, location } = response.data;
 
       dispatch({
         type: SEARCH_SUCCESS,
         payload: {
-          searchListings: response.data
+          searchListings: response.data.vids,
+          searchCount: response.data.vidCount
         },
       });
     } catch (error) {
@@ -478,9 +448,7 @@ const AppProvider = ({ children }) => {
         updateUser,
         handleChange,
         clearValues,
-        createJob,
         getJobs,
-        setEditJob,
         deleteJob,
         clearFilters,
         editJob,

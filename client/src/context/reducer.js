@@ -93,11 +93,11 @@ const reducer = (state, action) => {
       }
 
       if (action.type === SET_CHANNEL) {
-        return { ...state, currentChannel: action.payload.currentChannel }
+        return { ...state, currentChannel: action.payload.currentChannel  }
       }
 
       if (action.type === SET_LIBRARY) {
-        return { ...state, library: action.payload.library, currentChannel: {name:'Loading...'}, currentVideo: {videoId:null}}
+        return { ...state, library: action.payload.library, searchListings: [], currentChannel: {name:'Loading...'}, currentVideo: {videoId:null}, searchCount: 0, searchPage: 1}
       }
 
       if (action.type === UPDATE_CHANNEL_LIST) {
@@ -265,7 +265,7 @@ const reducer = (state, action) => {
       }
 
       if (action.type === SEARCH_BEGIN) {
-        return { ...state, isLoading: true }
+        return { ...state, isLoading: true, searchPage: action.payload.searchPage}
       }
 
       if (action.type === SELECT_VIDEO) {
@@ -276,7 +276,7 @@ const reducer = (state, action) => {
       }
 
       if (action.type === SEARCH_SUCCESS) {
-        return { ...state, searchListings: action.payload.searchListings, isLoading: false }
+        return { ...state, searchListings: action.payload.searchListings, searchCount: action.payload.searchCount, isLoading: false }
       }
 
       throw new Error(`no such action :${action.type}`)

@@ -10,9 +10,9 @@ const VideoSearchSnippet = (props) => {
     <React.Fragment>
         {
           props.video.transcript.map((y, i) => (
-            <tr>
+            <tr key={i}>
               <td >{y.start}</td>
-              <td ><p><a href={`https://youtube.com/watch?v=${props.videoId}&t=${y.start}s`} target="_blank" key={i}>{ReactHtmlParser(y.text)}</a></p></td>
+              <td ><p><a href={`https://youtube.com/watch?v=${props.videoId}&t=${y.start}s`} target="_blank">{ReactHtmlParser(y.text)}</a></p></td>
             </tr>
         ))}
     </React.Fragment>

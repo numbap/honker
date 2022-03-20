@@ -5,12 +5,12 @@ import NavBar from './NavBar.js'
 import BigSidebar from './BigSidebar'
 import SmallSidebar from './SmallSidebar'
 import FormRowSelect from './formRowSelect'
-import SearchContainer from './SearchContainer'
 import ChartsContainer from './ChartsContainer.js'
 import Loading from './Loading.js'
 import VideoSearchSnippet from './VideoSearchSnippet.js'
 import VideoSearchAllSnippets from './VideoSearchAllSnippets.js'
 import Nav from './Nav.js'
+import Paginator from './Paginator.js'
 
 export {
     Logo, 
@@ -21,8 +21,8 @@ export {
     NavBar, 
     FormRowSelect, 
     Nav,
-    SearchContainer, 
     VideoSearchSnippet,
     ChartsContainer, 
     Loading, 
+    Paginator,
     VideoSearchAllSnippets}

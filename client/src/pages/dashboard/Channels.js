@@ -30,7 +30,7 @@ const Channels = () => {
     <Wrapper>
       
       <div>
-      {isLoading ? <Loading/> : <ChannelForm/>}
+      {isLoading ? <div/> : <ChannelForm/>}
       {isLoading ? <Loading/> : <ChannelList/>}
         
       </div>

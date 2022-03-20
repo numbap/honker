@@ -13,10 +13,15 @@ const transcriptUrl = ""
 export const searchTranscripts = async (req, res) => {
 
   let currentChannel = await ChannelModel.findOne({hash: req.params.id})
-
+  const perPage = 25
+  let page = (parseInt(req.body.searchPage) - 1)*perPage
     let vids = await VideoModel.find({ 
     '$text': {'$search': req.body.search}, 
-    'channel': currentChannel._id})
+    'channel': currentChannel._id}).limit(perPage).skip(page)
+    
+    let vidCount = await VideoModel.find({ 
+      '$text': {'$search': req.body.search}, 
+      'channel': currentChannel._id}).count()
 
     vids = await vids.map(async x => {
       x.transcript = await boldifyer(req.body.search, x.transcript)
@@ -26,7 +31,7 @@ export const searchTranscripts = async (req, res) => {
     vids = await Promise.all(vids)
 
 
-  res.status(StatusCodes.OK).json( vids )
+  res.status(StatusCodes.OK).json( {vids, vidCount, paijee: req.body.searchPage} )
   }
 
 

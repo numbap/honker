@@ -2,11 +2,8 @@ import styled from 'styled-components'
 import {Landing, Error, Register, ProtectedRoute, ChannelSearch, Library} from './pages'
 import {BrowserRouter, Routes, Route} from 'react-router-dom' 
 import {
-  AddJob, 
-  AllJobs, 
   Profile, 
   SharedLayout, 
-  Stats, 
   Channels} from './pages/dashboard/index.js'
 
 function App() {
