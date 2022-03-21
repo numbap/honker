@@ -400,6 +400,7 @@ const AppProvider = ({ children }) => {
 
     dispatch({ type: SEARCH_BEGIN, payload: {searchPage} });
     try {
+      console.log(search,searchPage, "sssss")
       const response = await axios.post(
         `/api/v1/search/${channelId}`,{
         search, 

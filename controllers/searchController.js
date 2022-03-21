@@ -12,26 +12,48 @@ const transcriptUrl = ""
 
 export const searchTranscripts = async (req, res) => {
 
-  let currentChannel = await ChannelModel.findOne({hash: req.params.id})
+  let currentChannel
+  let vids
+  let page
+  let vidCount
+
+  currentChannel = await ChannelModel.findOne({hash: req.params.id})
+
   const perPage = 25
-  let page = (parseInt(req.body.searchPage) - 1)*perPage
-    let vids = await VideoModel.find({ 
+  page = (parseInt(req.body.searchPage) - 1)*perPage
+
+  vidCount = await VideoModel.find({ 
     '$text': {'$search': req.body.search}, 
-    'channel': currentChannel._id}).limit(perPage).skip(page)
+    'channel': currentChannel._id}).count()
+
+  try{
+
     
-    let vidCount = await VideoModel.find({ 
+
+
+    console.log(vidCount, "ssssss")
+
+    
+    vids = await VideoModel.find({ 
       '$text': {'$search': req.body.search}, 
-      'channel': currentChannel._id}).count()
+      'channel': currentChannel._id}).limit(perPage).skip(page)
+      
+     
+      vids = await vids.map(async x => {
+        x.transcript = await boldifyer(req.body.search, x.transcript)
+        return x
+      })
+  
+      vids = await Promise.all(vids)
+  
+  
+    res.status(StatusCodes.OK).json( {vids, vidCount, paijee: req.body.searchPage} )
+  }catch(e){
+    console.log("error", e)
+    res.status(StatusCodes.OK).json( { paijee: vidCount} )
+    // throw new NotFoundError(`Invalid input given`, {e, paijee: req.body.searchPage})
+  }
 
-    vids = await vids.map(async x => {
-      x.transcript = await boldifyer(req.body.search, x.transcript)
-      return x
-    })
-
-    vids = await Promise.all(vids)
-
-
-  res.status(StatusCodes.OK).json( {vids, vidCount, paijee: req.body.searchPage} )
   }
 
 

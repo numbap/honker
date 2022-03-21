@@ -57,7 +57,7 @@ const VideoSchema = new mongoose.Schema(
       },
       { timestamps: true }
   )
-  VideoSchema.index({'name': 1, 'corpus': -1});
+  VideoSchema.index({corpus: 'text', name: 'text' });
 
   const ChannelSchema = new mongoose.Schema(
     {
