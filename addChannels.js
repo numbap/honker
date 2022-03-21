@@ -6,25 +6,28 @@ import connectDB from './db/connect.js'
 
 dotenv.config()
 
-// const start = async () => {
 
-//     try{
-//         await connectDB(process.env.MONGO_URL)
-//     }catch(error){
-//         console.log(error)
-//     }
 
-//     let req = { body: { hash: "UC5tEELgWBfKbA9fVPRzBzPQ"}}
-//     // refTest("UCGw8Bgp61axxxxxxxx")
-//     updateChannel("UChLtXXpo4Ge1ReTEboVvTDg", user, true)
+const start = async () => {
 
-//     //await getChannelId("ubldqqM1tPw")
-//     //const channel = new Channel.findOne({ name: 'Frooo' }).populate('videos');
-//     // console.new
+    try{
+        await connectDB(process.env.MONGO_URL)
+        let channels = await ChannelModel.find()
+        console.log(channels)
+        // Get all channels
+
+    }catch(error){
+        console.log(error)
+    }
+
+   
+    //await getChannelId("ubldqqM1tPw")
+    //const channel = new Channel.findOne({ name: 'Frooo' }).populate('videos');
+    // console.new
         
     
 
-// } 
+} 
 
 // const createJob = async (req, res) => {
 //     const { position, company } = req.body
@@ -55,12 +58,4 @@ dotenv.config()
 // start()
 
 
-let searchString = "toys for dogs"
-
-let stringArray = [
-    "he plays with toys",
-    "dogs hate postmen",
-    "this song is lame"
-]
-
-console.log(boldifyer(searchString, stringArray))
+start()

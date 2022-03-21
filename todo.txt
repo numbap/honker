@@ -1,4 +1,5 @@
-Upload to Heroku
 Cron job to top up all channels
 Register domain
 Add to porftolio
+Add 100 channels
+Fix spinner on full corpus view
