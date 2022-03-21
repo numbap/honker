@@ -1,6 +1,4 @@
-Fix spinner on channels page 
 Upload to Heroku
 Cron job to top up all channels
-Create indexes on database 
 Register domain
 Add to porftolio
