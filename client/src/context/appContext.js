@@ -393,9 +393,7 @@ const AppProvider = ({ children }) => {
 
 
 
-  /////////////////////////////////////
-  // Come back and check logic here
-  /////////////////////////////////////
+
   const searchChannel = async (search, channelId, searchPage) => {
 
     dispatch({ type: SEARCH_BEGIN, payload: {searchPage} });

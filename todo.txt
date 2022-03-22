@@ -1,7 +1,3 @@
 Register domain
-Add to porftolio
 Add 100 channels
-Fix spinner on full corpus view
-floor timestamp
-If contains full transcript, break up into sentences ... text goes here ... [time slot unknown]
-Add analytics
+Only select corpues that contain all keywords

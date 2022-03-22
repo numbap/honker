@@ -6,15 +6,12 @@ const VideoSearchAllSnippets = (props) => {
   const { isLoading, currentVideo } = useAppContext()
 
 
-  return (
+  return (isLoading && (currentVideo.videoId === props.videoId)) ? (<Loading />) : (
     <tr>
-        { isLoading ?
-              <td colSpan="2"><Loading /></td>:
               <td colSpan="2"><p>{
               currentVideo.transcript.map((y, i) => (
               <a href={`https://youtube.com/watch?v=${props.videoId}&t=${y.start}s`} target="_blank" key={i}>{ReactHtmlParser(y.text)} </a> 
             ))}</p></td>
-        }
     </tr>
   )
 

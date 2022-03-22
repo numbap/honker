@@ -66,7 +66,7 @@ const ChannelSearch = () => {
           <div className='col-12'>
             <h1>{currentChannel.name} <a href={`https://www.youtube.com/channel/${params.channelId}`} target='_blank'><FaYoutube /></a></h1>
             {(((searchListings.length === 0) && !isLoading) && <h3>Enter a search query and we'll tell you where they discussed your topic.</h3>)}
-            {isLoading ? (<Loading />) :
+            {isLoading && (currentVideo.videoId === null && (searchListings.length == 0)) ? (<Loading />) :
               
               (<div className='table-responsive'>
             <table className="table table-light mx-auto w-auto">
