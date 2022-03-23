@@ -78,14 +78,14 @@ function Register() {
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/')
+        navigate('/admin')
       }, 3000)
     }
   }, [user, navigate])
 
   return (
     <Wrapper className='full-page'>
-      <form className='form' onSubmit={onSubmit}>
+      <form className='form epsilon' onSubmit={onSubmit}>
         <Logo />
         {showAlert && <Alert />}
 
@@ -101,17 +101,17 @@ function Register() {
             />
           )}
 
-        <FormRow type={"text"} name={"email"} value={values.email} labelText={"Email"} handleChange={handleChange}/>
-        <FormRow type={"password"} name={"password"} value={values.password} labelText={"Password"} handleChange={handleChange}/>
+        <FormRow type={"text"} name={"email"} value={values.email} labelText={"Email"} handleChange={handleChange} className='epsilon' />
+        <FormRow type={"password"} name={"password"} value={values.password} labelText={"Password"} handleChange={handleChange} className='epsilon'/>
 
-        <button type='submit' className='btn btn-block' disable={isLoading}>
+        <button type='submit' className='btn btn-block epsilon' disable={isLoading}>
             {values.isMember ? 'Login' : 'Register'}
         </button>
 
         <p>
         {values.isMember ? 'Not a member yet?' : 'Already a member?'}
   
-        <button type='button' onClick={toggleMember} className='member-btn'>
+        <button type='button' onClick={toggleMember} className='member-btn epsilon'>
           {values.isMember ? 'Register' : 'Login'}
         </button>
       </p>

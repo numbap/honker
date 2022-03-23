@@ -145,8 +145,8 @@ ul {
   object-fit: cover;
 }
 /* buttons */
-/* 
-.btn {
+
+.btn.epsilon {
   cursor: pointer;
   color: var(--white);
   background: var(--primary-500);
@@ -159,35 +159,35 @@ ul {
   text-transform: capitalize;
   display: inline-block;
 }
-.btn:hover {
+.btn:hover.epsilon {
   background: var(--primary-700);
   box-shadow: var(--shadow-3);
 }
-.btn-hipster {
+.btn-hipster.epsilon {
   color: var(--primary-500);
   background: var(--primary-200);
 }
-.btn-hipster:hover {
+.btn-hipster:hover.epsilon {
   color: var(--primary-200);
   background: var(--primary-700);
 }
-.btn-block {
+.btn-block.epsilon {
   width: 100%;
 }
-.btn-hero {
+.btn-hero.epsilon {
   font-size: 1.25rem;
   padding: 0.5rem 1.25rem;
 }
-.btn-danger {
+.btn-danger.epsilon {
   background: var(--red-light);
   color: var(--red-dark);
 }
-.btn-danger:hover {
+.btn-danger.epsilon:hover {
   background: var(--red-dark);
   color: var(--white);
-} */
+} 
 /* alerts */
-.alert {
+.alert.epsilon {
   padding: 0.375rem 0.75rem;
   margin-bottom: 1rem;
   border-color: transparent;
@@ -196,17 +196,19 @@ ul {
   letter-spacing: var(--letterSpacing);
 }
 
-.alert-danger {
+.alert-danger.epsilon {
   color: var(--red-dark);
   background: var(--red-light);
 }
-.alert-success {
+.alert-success.epsilon {
   color: var(--green-dark);
   background: var(--green-light);
 }
+
+
 /* form */
 
-/* .form {
+.form.epsilon {
   width: 90vw;
   max-width: var(--fixed-width);
   background: var(--white);
@@ -216,46 +218,46 @@ ul {
   margin: 3rem auto;
   transition: var(--transition);
 }
-.form:hover {
+.form:hover.epsilon {
   box-shadow: var(--shadow-4);
 }
-.form-label {
+.form-label.epsilon {
   display: block;
   font-size: var(--smallText);
   margin-bottom: 0.5rem;
   text-transform: capitalize;
   letter-spacing: var(--letterSpacing);
 }
-.form-input,
-.form-textarea,
-.form-select {
+.form-input.epsilon,
+.form-textarea.epsilon,
+.form-select.epsilon {
   width: 100%;
   padding: 0.375rem 0.75rem;
   border-radius: var(--borderRadius);
   background: var(--backgroundColor);
   border: 1px solid var(--grey-200);
 }
-.form-input,
-.form-select,
-.btn-block {
+.form-input.epsilon,
+.form-select.epsilon,
+.btn-block.epsilon {
   height: 35px;
 }
-.form-row {
+.form-row.epsilon {
   margin-bottom: 1rem;
 }
 
-.form-textarea {
+.form-textarea.epsilon {
   height: 7rem;
 }
-::placeholder {
+::placeholder.epsilon {
   font-family: inherit;
   color: var(--grey-400);
 }
-.form-alert {
+.form-alert.epsilon {
   color: var(--red-dark);
   letter-spacing: var(--letterSpacing);
   text-transform: capitalize;
-} */
+}
 /* alert */
 
 @keyframes spinner {
