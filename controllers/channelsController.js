@@ -142,6 +142,7 @@ export const addChannel = async (req, res) => {
     var config = {
       method: 'get',
       url: `https://subtitles-for-youtube.p.rapidapi.com/subtitles/${video}`,
+      params: {type: 'Auto', translated: 'None', lang: 'en-US'},
       headers: { 
         'x-rapidapi-key': process.env.TRANSCRIPT_KEY, 
         'x-rapidapi-host': 'subtitles-for-youtube.p.rapidapi.com', 
