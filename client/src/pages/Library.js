@@ -27,7 +27,8 @@ const Library = (props) => {
                 </div>)
             ))}
         </div>
-        <div>Are you a content creator? Contact us to find out how you can <a href="https://docs.google.com/forms/d/e/1FAIpQLSdq7CYkmmCFBJCX7qqUsLzogrW7lKTJUyZ2mXBuqPYjI-2TNQ/viewform">leverage Zeeph to enhance your audience experience</a>.</div>
+        <div><p>Are you a content creator? Contact us to find out how you can <a href="https://docs.google.com/forms/d/e/1FAIpQLSdq7CYkmmCFBJCX7qqUsLzogrW7lKTJUyZ2mXBuqPYjI-2TNQ/viewform">leverage Zeeph to enhance your audience experience</a>.</p></div>
+        <div><p><Link to={'/Privacy'}>Privacy Policy</Link></p></div>
         </div>
         </div>
     )

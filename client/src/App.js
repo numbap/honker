@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {Landing, Error, Register, ProtectedRoute, ChannelSearch, Library} from './pages'
+import {Landing, Error, Register, ProtectedRoute, ChannelSearch, Library, Privacy} from './pages'
 import {BrowserRouter, Routes, Route} from 'react-router-dom' 
 import {
   Profile, 
@@ -20,6 +20,7 @@ function App() {
         </Route>
         <Route path="/register" element={<Register/>} />
         <Route path="/landing" element={<Landing />} />
+        <Route path="/privacy" element={<Privacy />} />
         <Route path='/:channelId' element={<ChannelSearch />}/>
         <Route path='/' element={<Library />}/>
         <Route path="*" element={<Error/>} />
